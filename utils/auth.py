@@ -1,7 +1,7 @@
 from jose import jwt, JWTError
 from fastapi import Header, HTTPException, Depends
 
-from config.settings import SECRET_KEY, ALGORITHM
+from core.config import settings
 from fastapi.security import OAuth2PasswordBearer  # 一个安全工具类，方便从请求中获取 Bearer Token
 from utils.token_blacklist import token_blacklist
 
@@ -34,8 +34,8 @@ def get_current_user(
 
         payload = jwt.decode(
             token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
         )
 
         return payload

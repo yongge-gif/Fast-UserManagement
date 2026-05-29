@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from config.settings import DATABASE_URL
+from core.config import settings
 
 # 创建引擎
-engine = create_engine(DATABASE_URL)
+engine = create_engine(settings.DATABASE_URL)
 
 # 创建会话 生成数据库操作对象
 SessionLocal = sessionmaker(
