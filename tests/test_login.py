@@ -10,7 +10,7 @@ def test_login():
     response = client.post(
         "/login",
         json={
-            "username": "pytest_user3",
+            "username": "pytest_user",
             "password": "123456"
         }
     )
