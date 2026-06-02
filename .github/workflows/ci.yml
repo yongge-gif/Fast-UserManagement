@@ -20,11 +20,11 @@ jobs:
 
       # 拉取代码
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # 调用 GitHub 官方 checkout 插件（第4版）, 作用是把你的仓库代码下载到 GitHub Actions 运行环境
 
       # 安装python
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5  # 在 GitHub Actions 的 Ubuntu 虚拟机中安装 Python
 
         with:
           python-version: "3.11"
@@ -33,6 +33,17 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+      
+
+      # 创建测试环境变量
+      - name: Create .env
+        run: |
+          echo "DATABASE_URL=sqlite:///./test.db" >> .env
+          echo "SECRET_KEY=test_secret" >> .env
+          echo "ALGORITHM=HS256" >> .env
+          echo "REDIS_HOST=localhost" >> .env
+          echo "REDIS_PORT=6379" >> .env
+          echo "ACCESS_TOKEN_EXPIRE_MINUTES=30" >> .env
 
       # 执行测试
       - name: Run Tests

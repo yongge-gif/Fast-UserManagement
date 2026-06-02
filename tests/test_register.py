@@ -4,12 +4,12 @@ from main import app
 
 client = TestClient(app)
 
-# 每次测试生成随机用户名
-username = f"pytest_{uuid.uuid4().hex[:8]}"
-
 
 # 注册测试接口
 def test_register():
+
+    # 每次测试生成随机用户名
+    username = f"pytest_{uuid.uuid4().hex[:8]}"
 
     response = client.post(
         "/register",
