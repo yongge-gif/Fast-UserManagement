@@ -1,4 +1,4 @@
-import pytest
+import pytest, uuid
 from fastapi.testclient import TestClient
 from main import app
 
@@ -8,10 +8,22 @@ client = TestClient(app)
 # 获取token
 @pytest.fixture()
 def token():
+    username = f"pytest_{uuid.uuid4().hex[:8]}"
+
+    # 先注册
+    client.post(
+        "/register",
+        data={
+            "username": username,
+            "password": "123456",
+            "email": f"{username}@test.com"
+        }
+    )
+
     response = client.post(
         "/login",
         json={
-            "username": "pytest_user",
+            "username": "username",
             "password": "123456"
         }
     )
