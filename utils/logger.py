@@ -1,6 +1,7 @@
 import logging, os
 from logging.handlers import RotatingFileHandler
 
+# GitHub Actions 运行时自己创建logs目录
 os.makedirs("logs", exist_ok=True)
 
 

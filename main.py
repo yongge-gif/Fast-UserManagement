@@ -1,4 +1,4 @@
-import time
+import time, os
 from fastapi import FastAPI, Request
 from routers.user_router import router
 from database import engine
@@ -10,6 +10,10 @@ from contextlib import asynccontextmanager  # 导入“异步上下文管理器�
 from fastapi.exceptions import RequestValidationError  # FastAPI 的“请求参数校验异常”类
 from starlette.exceptions import HTTPException
 from utils.response import error_response
+
+
+# GitHub Actions 运行时自己创建uploads目录
+os.makedirs("uploads", exist_ok=True)
 
 
 # 创建生命周期管理
