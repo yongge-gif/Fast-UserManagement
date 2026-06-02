@@ -23,7 +23,7 @@ def token():
     response = client.post(
         "/login",
         json={
-            "username": "username",
+            "username": username,
             "password": "123456"
         }
     )
