@@ -1,5 +1,8 @@
-import logging
+import logging, os
 from logging.handlers import RotatingFileHandler
+
+os.makedirs("logs", exist_ok=True)
+
 
 # 创建logger
 logger = logging.getLogger("fastapi")
