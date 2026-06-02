@@ -16,6 +16,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+
+    services:
+
+      # 测试环境自动启动mysql
+      mysql:
+        image: mysql:8
+
+       # 直接在 GitHub Actions 启动 Redis 服务。
+      redis:
+
+        image: redis:7
+
+        ports:
+          - 6379:6379
+
     steps:
 
       # 拉取代码
