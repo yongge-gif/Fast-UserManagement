@@ -1,65 +1,134 @@
-# FastAPI Backend Project
+# FastAPI User Management System
 
-基于 FastAPI + MySQL + SQLAlchemy + Redis 构建的后台管理系统后端项目。
-
-## 项目简介
-
-本项目是一个使用 FastAPI 开发的 RESTful API 后端项目，包含用户认证、权限控制、头像上传、Redis缓存、软删除等常见后台功能。
-
-适合作为 FastAPI 学习项目与后端开发练习项目。
+基于 FastAPI + MySQL + Redis 构建的用户管理系统，集成 JWT 双 Token 认证、权限控制、Redis 缓存、接口限流、邮箱验证码、Celery 异步任务、Docker 容器化部署、自动化测试及 CI 持续集成等功能。
 
 ---
 
 ## 技术栈
 
-- FastAPI
-- SQLAlchemy ORM
-- MySQL
-- Redis
-- JWT认证
-- Alembic 数据库迁移
-- Pydantic
-- Uvicorn
+### 后端框架
+
+* FastAPI
+* SQLAlchemy ORM
+* Pydantic
+* Alembic
+
+### 数据库与缓存
+
+* MySQL
+* Redis
+
+### 认证与安全
+
+* JWT Access Token
+* JWT Refresh Token
+* bcrypt 密码加密
+* RBAC 权限控制
+* Redis 接口限流
+
+### 异步任务
+
+* Celery
+* Redis Broker
+
+### 工程化
+
+* Docker
+* Docker Compose
+* Nginx
+* Gunicorn
+* Pytest
+* GitHub Actions
 
 ---
 
-## 已实现功能
+## 核心功能
 
-### 用户模块
+### 用户认证
 
-- 用户注册
-- 用户登录
-- JWT Token认证
-- Refresh Token刷新
-- 获取当前用户信息
-- 修改用户信息
-- 修改密码
-- 用户头像上传
+* 用户注册
+* 用户登录
+* JWT 双 Token 认证
+* Refresh Token 刷新机制
+* 获取当前用户信息
+* 修改密码
 
-### 权限管理
+### 权限控制
 
-- RBAC角色权限
-- 管理员接口权限控制
-- 用户封禁功能
+* RBAC 角色权限管理
+* 管理员接口权限控制
+* 用户封禁功能
 
-### 数据处理
+### 邮箱验证码
 
-- 用户软删除
-- 分页查询
-- 统一响应结构
-- 全局异常处理
+* 验证码生成
+* Redis 缓存存储
+* 过期时间控制
+* 验证码校验
 
-### Redis缓存
+### Redis 缓存
 
-- 用户信息缓存
-- Cache Aside旁路缓存模式
-- Redis缓存更新策略
+* 用户信息缓存
+* Cache Aside 旁路缓存模式
+* 缓存更新策略
+
+### 系统功能
+
+* 用户头像上传
+* 分页查询
+* 软删除
+* 排序查询
+* 统一响应结构
+* 全局异常处理
+
+### 异步任务
+
+* Celery 邮件异步发送
+* 避免同步任务阻塞接口响应
+
+---
+
+## 项目架构
+
+Client
+
+↓
+
+Nginx
+
+↓
+
+Gunicorn (4 Workers)
+
+↓
+
+FastAPI
+
+↓
+
+MySQL
+
+FastAPI
+
+↓
+
+Redis
+
+FastAPI
+
+↓
+
+Celery
+
+↓
+
+Email Service
 
 ---
 
 ## 项目结构
 
-```bash
+```text
 fastapi_project
 ├── alembic
 ├── config
@@ -68,143 +137,128 @@ fastapi_project
 ├── routers
 ├── schemas
 ├── services
-├── utils
+├── tests
 ├── uploads
+├── utils
 ├── main.py
 ├── database.py
 └── requirements.txt
 ```
 
----
+## Docker Compose 服务
 
-## 环境配置
+项目采用 Docker Compose 进行多服务编排：
 
-创建 `.env` 文件：
+* FastAPI
+* MySQL
+* Redis
+* Celery
+* Nginx
 
-```env
-DATABASE_URL=mysql+pymysql://root:123456@127.0.0.1:3306/fastapi_db
-
-SECRET_KEY=123456
-
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-```
-
----
-
-## 安装依赖
+实现一键启动与统一管理。
 
 ```bash
-pip install -r requirements.txt
+docker compose up -d
 ```
 
 ---
 
-## 启动项目
+## 自动化测试
+
+使用 Pytest + HTTPX 编写接口自动化测试。
+
+测试覆盖：
+
+* 用户注册
+* 用户登录
+* 获取当前用户信息
+
+执行测试：
+
+```bash
+pytest
+```
+
+---
+
+## CI 持续集成
+
+使用 GitHub Actions 实现持续集成。
+
+流程：
+
+```text
+git push
+    ↓
+GitHub Actions
+    ↓
+Pytest
+    ↓
+测试通过
+```
+
+代码提交后自动执行测试，保证代码质量。
+
+---
+
+## API 文档
+
+启动项目：
 
 ```bash
 uvicorn main:app --reload
 ```
 
-启动后访问：
+访问 Swagger：
 
-```bash
+```text
 http://127.0.0.1:8000/docs
 ```
 
-Swagger接口文档：
+访问 ReDoc：
 
-- `/docs`
-- `/redoc`
-
----
-
-## 数据库迁移
-
-生成迁移：
-
-```bash
-alembic revision --autogenerate -m "init"
-```
-
-执行迁移：
-
-```bash
-alembic upgrade head
+```text
+http://127.0.0.1:8000/redoc
 ```
 
 ---
 
 ## 项目亮点
 
-- 使用 FastAPI 分层架构开发
-- 使用 JWT 实现身份认证
-- Redis 缓存优化接口性能
-- 使用 Alembic 管理数据库迁移
-- RESTful API 风格设计
-- 统一异常处理与统一响应结构
-
----
-
-## 开发记录
-
-项目采用 Git 分支与阶段式开发：
-
-- day1 ~ day32 持续迭代
-- 从基础 CRUD 到 Redis 缓存优化
-- 逐步完善后台权限系统
-
----
-
-## 后续开发计划
-
-项目目前仍在持续开发中，后续计划继续完善以下功能：
-
-### 性能优化
-
-- Redis接口限流
-- 热点数据缓存
-- 缓存穿透与缓存雪崩处理
-- Redis分布式锁
-
-### 安全增强
-
-- 登录失败次数限制
-- 接口访问频率限制
-- IP黑名单
-- 敏感接口二次验证
-
-### 系统功能
-
-- 操作日志记录
-- 文件云存储（OSS）
-- 消息通知系统
-- 邮箱验证码
-- 用户行为统计
-
-### 工程化
-
-- Docker Compose部署
-- Nginx反向代理
-- Gunicorn + Uvicorn生产部署
-- CI/CD 自动化部署
-
-### 微服务方向（学习中）
-
-- Celery异步任务
-- RabbitMQ消息队列
-- 分布式服务拆分
-- API网关
+* FastAPI 分层架构设计
+* JWT 双 Token 认证机制
+* Redis 缓存优化
+* Redis 接口限流
+* Celery 异步任务
+* Docker 容器化部署
+* Docker Compose 服务编排
+* Nginx 反向代理
+* Gunicorn 多 Worker 部署
+* Pytest 自动化测试
+* GitHub Actions CI 持续集成
 
 ---
 
 ## 项目状态
 
-🚧 持续迭代开发中...
+持续迭代开发中。
+
+后续计划：
+
+* RabbitMQ
+* 微服务架构升级
+* 分布式缓存优化
+* 分布式锁
+* 操作日志系统
+* 对象存储 OSS
 
 ---
 
-## 作者
+## Author
 
 杨连勇
+
 Computer Science and Technology
+
+Python Backend Developer
+
